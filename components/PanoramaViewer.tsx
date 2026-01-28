@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 
 interface PanoramaViewerProps {
   imageUrl: string;
+  autoRotate?: boolean;
 }
 
 declare global {
@@ -12,7 +13,7 @@ declare global {
   }
 }
 
-export default function PanoramaViewer({ imageUrl }: PanoramaViewerProps) {
+export default function PanoramaViewer({ imageUrl, autoRotate = false }: PanoramaViewerProps) {
   const viewerRef = useRef<HTMLDivElement>(null);
   const viewerInstance = useRef<any>(null);
 
@@ -43,6 +44,7 @@ export default function PanoramaViewer({ imageUrl }: PanoramaViewerProps) {
         hfov: 100,
         pitch: 0,
         yaw: 0,
+        autoRotate: autoRotate ? -2 : 0,
       });
     };
 
@@ -58,7 +60,7 @@ export default function PanoramaViewer({ imageUrl }: PanoramaViewerProps) {
         script.parentNode.removeChild(script);
       }
     };
-  }, [imageUrl]);
+  }, [imageUrl, autoRotate]);
 
   return (
     <div

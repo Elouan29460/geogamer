@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import VantaBackground from "@/components/VantaBackground";
 
 const levelData = [
   { id: 1, name: "Palier 1", difficulty: "Facile", description: "Jeux iconiques pour commencer en douceur" },
@@ -18,8 +19,9 @@ export default function LevelIntroPage() {
 
   if (!level) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-        <div className="text-white text-2xl">Palier introuvable</div>
+      <div className="min-h-screen flex items-center justify-center relative">
+        <VantaBackground />
+        <div className="text-white text-2xl relative z-10">Palier introuvable</div>
       </div>
     );
   }
@@ -29,9 +31,10 @@ export default function LevelIntroPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 relative">
+      <VantaBackground />
       {/* Main Content */}
-      <div className="max-w-2xl w-full">
+      <div className="max-w-2xl w-full relative z-10">
           <div className="bg-gray-800/50 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-12 text-center">
             {/* Badge de difficulté */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 bg-purple-500/20 border border-purple-500/40">

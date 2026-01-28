@@ -252,7 +252,10 @@ export default function GamePage() {
       <div className="fixed inset-0 bg-gray-800">
         <div className="w-full h-full flex items-center justify-center overflow-hidden">
           {currentGame?.imageFile ? (
-            <PanoramaViewer imageUrl={`/images/games/${currentGame.imageFile}`} />
+            <PanoramaViewer 
+              imageUrl={`/images/games/${currentGame.imageFile}`} 
+              autoRotate={phase === "result"}
+            />
           ) : (
             <div className="text-gray-500 text-2xl">
               [Aucune image disponible]
@@ -276,7 +279,7 @@ export default function GamePage() {
               height="96"
               fill="none"
               stroke="white"
-              strokeWidth="3"
+              strokeWidth="4"
             />
             {/* Bordure rouge qui progresse */}
             <rect
@@ -285,8 +288,8 @@ export default function GamePage() {
               width="96"
               height="96"
               fill="none"
-              stroke="rgb(239, 68, 68)"
-              strokeWidth="3"
+              stroke="rgb(220, 38, 38)"
+              strokeWidth="4"
               strokeDasharray="384"
               strokeDashoffset="384"
               style={{
@@ -299,7 +302,11 @@ export default function GamePage() {
           {/* Losange transparent avec le timer */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-28 h-28 flex items-center justify-center">
-              <div className={`text-6xl font-bold ${timer <= 10 ? 'text-red-400' : 'text-white'}`}>
+              <div className={`text-6xl font-bold transition-all duration-300 ${
+                timer <= 10 
+                  ? 'text-red-400 animate-pulse drop-shadow-[0_0_12px_rgba(248,113,113,0.9)]' 
+                  : 'text-white'
+              }`}>
                 {timer}
               </div>
             </div>
@@ -463,7 +470,7 @@ export default function GamePage() {
                   <img 
                     src={`/images/covers/${currentGame.coverFile}`}
                     alt={correctGame}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>

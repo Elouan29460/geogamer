@@ -9,7 +9,7 @@
           "id": "game1",
           "correctName": "The Witcher 3",
           "alternativeNames": ["witcher 3", "the witcher 3", "witcher iii", "the witcher iii", "w3"],
-          "imageFile": "the-witcher-3.jpeg",
+          "imageFile": "the-witcher-3.webp",
           "mapFile": "the-witcher-3.jpg",
           "coverFile": "the-witcher-3.jpeg",
           "mapLocation": { "x": 50, "y": 50 }
