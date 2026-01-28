@@ -45,48 +45,54 @@
           "id": "game5",
           "correctName": "Minecraft",
           "alternativeNames": ["minecraft", "mc"],
-          "imageFile": "minecraft_1.jpg",
-          "mapFile": "minecraft_map.jpg",
+          "imageFile": "minecraft.jpg",
+          "mapFile": "minecraft.jpg",
+          "coverFile": "minecraft.jpg",
           "mapLocation": { "x": 50, "y": 50 }
         },
         {
           "id": "game6",
           "correctName": "Cyberpunk 2077",
           "alternativeNames": ["cyberpunk", "cyberpunk 2077", "cp2077"],
-          "imageFile": "cyberpunk_1.jpg",
-          "mapFile": "cyberpunk_map.jpg",
+          "imageFile": "cyberpunk-2077.jpg",
+          "mapFile": "cyberpunk-2077.webp",
+          "coverFile": "cyberpunk-2077.jpg",
           "mapLocation": { "x": 55, "y": 45 }
         },
         {
           "id": "game7",
           "correctName": "Elden Ring",
           "alternativeNames": ["elden ring", "eldenring"],
-          "imageFile": "eldenring_1.jpg",
-          "mapFile": "eldenring_map.jpg",
+          "imageFile": "elden-ring.jpg",
+          "mapFile": "elden-ring.webp",
+          "coverFile": "elden-ring.jpg",
           "mapLocation": { "x": 40, "y": 60 }
         },
         {
           "id": "game8",
           "correctName": "The Last of Us",
           "alternativeNames": ["tlou", "the last of us", "last of us"],
-          "imageFile": "tlou_1.jpg",
-          "mapFile": "tlou_map.jpg",
+          "imageFile": "the-last-of-us.webp",
+          "mapFile": "the-last-of-us.png",
+          "coverFile": "the-last-of-us.jpg",
           "mapLocation": { "x": 35, "y": 65 }
         },
         {
           "id": "game9",
           "correctName": "Zelda Breath of the Wild",
           "alternativeNames": ["botw", "breath of the wild", "zelda botw", "zelda breath of the wild"],
-          "imageFile": "botw_1.jpg",
-          "mapFile": "botw_map.jpg",
+          "imageFile": "zelda-breath-of-the-wild.jpg",
+          "mapFile": "breath-of-the-wild.avif",
+          "coverFile": "zelda-breath-of-the-wild.jpg",
           "mapLocation": { "x": 70, "y": 30 }
         },
         {
           "id": "game10",
           "correctName": "God of War",
           "alternativeNames": ["god of war", "gow", "god of war 2018"],
-          "imageFile": "gow_1.jpg",
-          "mapFile": "gow_map.jpg",
+          "imageFile": "god-of-war.jpg",
+          "mapFile": "god-of-war.jpg",
+          "coverFile": "god-of-war.avif",
           "mapLocation": { "x": 25, "y": 75 }
         }
       ]
