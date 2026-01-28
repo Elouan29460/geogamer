@@ -349,7 +349,9 @@ export default function GamePage() {
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
                   i <= attempts 
                     ? 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.6)]' 
-                    : 'bg-gray-600/30'
+                    : 'bg-gray-600/30 border-2 border-white'
+                } ${
+                  wrongAnswer && i === attempts + 1 ? 'animate-[flash_0.6s_ease-in-out] bg-red-500' : ''
                 }`}
               />
             ))}
@@ -433,7 +435,7 @@ export default function GamePage() {
             <button
               onClick={handleValidateLocation}
               disabled={!markerPosition}
-              className="w-full mt-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-lg"
+              className="corner-border-btn w-full mt-2 px-8 py-3 text-white text-lg font-semibold rounded-lg hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               Valider
             </button>
@@ -446,12 +448,12 @@ export default function GamePage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-lg">
           <div className="p-8 text-center max-w-2xl mx-4">
             {/* Indicateur de rounds en haut */}
-            <div className="flex items-center justify-center gap-2 mb-12 -mt-12">
+            <div className="flex items-center justify-center gap-2 mb-8">
               {Array.from({ length: 15 }, (_, i) => (
                 <div key={i} className="flex items-center gap-2">
                   <div className={`w-10 h-10 flex items-center justify-center text-sm font-bold transition-all ${
                     i === currentGameIndex 
-                      ? 'bg-white text-black shadow-[0_0_20px_rgba(37,99,235,1)]' 
+                      ? 'bg-black text-white shadow-[0_0_20px_rgba(37,99,235,1)]' 
                       : roundsFound[i]
                         ? 'bg-white text-black' 
                         : 'text-white'
@@ -466,7 +468,8 @@ export default function GamePage() {
             {/* Afficher l'image du jeu si perdu */}
             {!gameFound && currentGame?.coverFile && (
               <div className="mb-6">
-                <div className="relative w-96 aspect-square mx-auto overflow-hidden border-4 border-white bg-gray-800">
+                <h2 className="text-white text-3xl font-black mb-6 uppercase">{correctGame}</h2>
+                <div className="relative w-[500px] aspect-square mx-auto overflow-hidden border-4 border-white bg-gray-800">
                   <img 
                     src={`/images/covers/${currentGame.coverFile}`}
                     alt={correctGame}
@@ -479,7 +482,8 @@ export default function GamePage() {
             {/* Afficher la carte avec les points si une localisation a été tentée */}
             {markerPosition && currentGame?.mapFile && (
               <div className="mb-6">
-                <div className="relative w-full aspect-video rounded-xl overflow-hidden border-2 border-purple-500/30">
+                <h2 className="text-white text-3xl font-black mb-6 uppercase">{correctGame}</h2>
+                <div className="relative w-[500px] aspect-square rounded-xl overflow-hidden border-4 border-white mx-auto">
                   <img 
                     src={`/images/maps/${currentGame.mapFile}`}
                     alt="Carte du jeu"
@@ -557,9 +561,10 @@ export default function GamePage() {
             )}
             <button
               onClick={handleNextRound}
-              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-lg font-semibold rounded-full hover:scale-105 transition-transform shadow-lg"
+              className="corner-border-btn corner-border-btn-animated mt-8 px-12 py-5 text-white text-xl font-semibold rounded-lg hover:scale-105 transition-transform relative"
             >
-              Round suivant
+              <span className="red-shine"></span>
+              <span className="relative z-20">Round suivant</span>
             </button>
           </div>
         </div>

@@ -17,6 +17,7 @@ export default function PanoramaViewer({ imageUrl, autoRotate = false }: Panoram
   const viewerRef = useRef<HTMLDivElement>(null);
   const viewerInstance = useRef<any>(null);
 
+  // Effet pour charger et initialiser Pannellum une seule fois
   useEffect(() => {
     // Charger le CSS de Pannellum
     const link = document.createElement("link");
@@ -44,7 +45,7 @@ export default function PanoramaViewer({ imageUrl, autoRotate = false }: Panoram
         hfov: 100,
         pitch: 0,
         yaw: 0,
-        autoRotate: autoRotate ? -2 : 0,
+        autoRotate: 0,
       });
     };
 
@@ -60,7 +61,17 @@ export default function PanoramaViewer({ imageUrl, autoRotate = false }: Panoram
         script.parentNode.removeChild(script);
       }
     };
-  }, [imageUrl, autoRotate]);
+  }, [imageUrl]);
+
+  // Effet séparé pour gérer l'autoRotate sans recréer le viewer
+  useEffect(() => {
+    if (viewerInstance.current) {
+      // Mettre à jour l'autoRotate sans reset
+      const config = viewerInstance.current.getConfig();
+      config.autoRotate = autoRotate ? -1 : 0;
+      viewerInstance.current.setUpdate(true);
+    }
+  }, [autoRotate]);
 
   return (
     <div

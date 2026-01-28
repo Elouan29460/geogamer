@@ -35,3 +35,76 @@ body {
   from { stroke-dashoffset: 384; }
   to { stroke-dashoffset: 0; }
 }
+
+@keyframes flash {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.corner-border-btn {
+  position: relative;
+  background: transparent;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.corner-border-btn::before,
+.corner-border-btn::after {
+  content: '';
+  position: absolute;
+  transition: all 0.4s ease;
+}
+
+.corner-border-btn::before {
+  top: 0;
+  left: 0;
+  width: 90px;
+  height: 35px;
+  border-top: 3px solid white;
+  border-left: 3px solid white;
+}
+
+.corner-border-btn::after {
+  bottom: 0;
+  right: 0;
+  width: 90px;
+  height: 35px;
+  border-bottom: 3px solid white;
+  border-right: 3px solid white;
+}
+
+.corner-border-btn:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+.corner-border-btn:hover::after {
+  width: 100%;
+  height: 100%;
+}
+
+.corner-border-btn-animated {
+  overflow: hidden;
+}
+
+.corner-border-btn-animated .red-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.6), transparent);
+  animation: slide-red 10s ease-in-out infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes slide-red {
+  0%, 85% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
