@@ -1,0 +1,113 @@
+{
+  "levels": [
+    {
+      "id": 1,
+      "name": "Palier 1",
+      "difficulty": "Facile",
+      "games": [
+        {
+          "id": "game1",
+          "correctName": "The Witcher 3",
+          "alternativeNames": ["witcher 3", "the witcher 3", "witcher iii", "the witcher iii", "w3"],
+          "imageFile": "the-witcher-3.jpeg",
+          "mapFile": "the-witcher-3.jpg",
+          "coverFile": "the-witcher-3.jpeg",
+          "mapLocation": { "x": 50, "y": 50 }
+        },
+        {
+          "id": "game2",
+          "correctName": "Skyrim",
+          "alternativeNames": ["skyrim", "the elder scrolls v", "the elder scrolls 5", "tes v", "tes 5", "elder scrolls skyrim"],
+          "imageFile": "skyrim.jpg",
+          "mapFile": "skyrim.jpg",
+          "coverFile": "skyrim.jpg",
+          "mapLocation": { "x": 45, "y": 55 }
+        },
+        {
+          "id": "game3",
+          "correctName": "Red Dead Redemption 2",
+          "alternativeNames": ["rdr2", "red dead 2", "red dead redemption 2", "red dead redemption ii"],
+          "imageFile": "red-dead-redemption-2.jpg",
+          "mapFile": "red-dead-redemption-2.avif",
+          "coverFile": "red-dead-redemption-2.jpg",
+          "mapLocation": { "x": 60, "y": 40 }
+        },
+        {
+          "id": "game4",
+          "correctName": "GTA V",
+          "alternativeNames": ["gta 5", "gta v", "grand theft auto 5", "grand theft auto v"],
+          "imageFile": "gta-5.jpg",
+          "mapFile": "gta-5.jpeg",
+          "coverFile": "gta-5.jpeg",
+          "mapLocation": { "x": 30, "y": 70 }
+        },
+        {
+          "id": "game5",
+          "correctName": "Minecraft",
+          "alternativeNames": ["minecraft", "mc"],
+          "imageFile": "minecraft_1.jpg",
+          "mapFile": "minecraft_map.jpg",
+          "mapLocation": { "x": 50, "y": 50 }
+        },
+        {
+          "id": "game6",
+          "correctName": "Cyberpunk 2077",
+          "alternativeNames": ["cyberpunk", "cyberpunk 2077", "cp2077"],
+          "imageFile": "cyberpunk_1.jpg",
+          "mapFile": "cyberpunk_map.jpg",
+          "mapLocation": { "x": 55, "y": 45 }
+        },
+        {
+          "id": "game7",
+          "correctName": "Elden Ring",
+          "alternativeNames": ["elden ring", "eldenring"],
+          "imageFile": "eldenring_1.jpg",
+          "mapFile": "eldenring_map.jpg",
+          "mapLocation": { "x": 40, "y": 60 }
+        },
+        {
+          "id": "game8",
+          "correctName": "The Last of Us",
+          "alternativeNames": ["tlou", "the last of us", "last of us"],
+          "imageFile": "tlou_1.jpg",
+          "mapFile": "tlou_map.jpg",
+          "mapLocation": { "x": 35, "y": 65 }
+        },
+        {
+          "id": "game9",
+          "correctName": "Zelda Breath of the Wild",
+          "alternativeNames": ["botw", "breath of the wild", "zelda botw", "zelda breath of the wild"],
+          "imageFile": "botw_1.jpg",
+          "mapFile": "botw_map.jpg",
+          "mapLocation": { "x": 70, "y": 30 }
+        },
+        {
+          "id": "game10",
+          "correctName": "God of War",
+          "alternativeNames": ["god of war", "gow", "god of war 2018"],
+          "imageFile": "gow_1.jpg",
+          "mapFile": "gow_map.jpg",
+          "mapLocation": { "x": 25, "y": 75 }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Palier 2",
+      "difficulty": "Moyen",
+      "games": []
+    },
+    {
+      "id": 3,
+      "name": "Palier 3",
+      "difficulty": "Difficile",
+      "games": []
+    },
+    {
+      "id": 4,
+      "name": "Palier 4",
+      "difficulty": "Expert",
+      "games": []
+    }
+  ]
+}
