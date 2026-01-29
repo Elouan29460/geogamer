@@ -42,7 +42,7 @@ export default function VantaBackground() {
             color2: 0xc5c1be,
             backgroundColor: 0x1b0808,
             size: 6.0,
-            spacing: 200.0,
+            spacing: 100.0,
             showLines: true,
           });
         }

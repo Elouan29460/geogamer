@@ -84,6 +84,48 @@ body {
   height: 100%;
 }
 
+.corner-border-btn-thin {
+  position: relative;
+  background: transparent;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.corner-border-btn-thin::before,
+.corner-border-btn-thin::after {
+  content: '';
+  position: absolute;
+  transition: all 0.4s ease;
+}
+
+.corner-border-btn-thin::before {
+  top: 0;
+  left: 0;
+  width: 90px;
+  height: 35px;
+  border-top: 2px solid white;
+  border-left: 2px solid white;
+}
+
+.corner-border-btn-thin::after {
+  bottom: 0;
+  right: 0;
+  width: 90px;
+  height: 35px;
+  border-bottom: 2px solid white;
+  border-right: 2px solid white;
+}
+
+.corner-border-btn-thin:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+.corner-border-btn-thin:hover::after {
+  width: 100%;
+  height: 100%;
+}
+
 .corner-border-btn-animated {
   overflow: hidden;
 }

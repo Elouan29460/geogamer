@@ -10,6 +10,10 @@ const PanoramaViewer = dynamic(() => import("@/components/PanoramaViewer"), {
   ssr: false,
 });
 
+const CubeTimer = dynamic(() => import("@/components/CubeTimer"), {
+  ssr: false,
+});
+
 type GamePhase = "guessing" | "locating" | "result";
 
 interface Game {
@@ -234,17 +238,23 @@ export default function GamePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       {/* Informations en haut à droite */}
-      <div className="fixed top-8 right-8 z-40 bg-black/70 backdrop-blur-md border border-purple-500/30 rounded-lg px-6 py-3">
-        <div className="space-y-1">
-          <div className="text-purple-400 text-sm font-semibold">
-            Palier {levelId}
-          </div>
-          <div className="text-white text-lg font-bold">
-            Jeu {currentGameIndex + 1}/15
-          </div>
-          <div className="text-gray-300 text-sm">
-            Score: <span className="text-white font-semibold">{score}</span>
-          </div>
+      <div className="fixed top-8 right-8 z-40 flex gap-6">
+        {/* Palier */}
+        <div className="text-center">
+          <div className="text-white text-sm font-bold">Palier</div>
+          <div className="text-white text-2xl font-bold">{levelId}</div>
+        </div>
+        
+        {/* Round */}
+        <div className="text-center">
+          <div className="text-white text-sm font-bold">Jeu</div>
+          <div className="text-white text-2xl font-bold">{currentGameIndex + 1}/15</div>
+        </div>
+        
+        {/* Score */}
+        <div className="text-center">
+          <div className="text-white text-sm font-bold">Score</div>
+          <div className="text-white text-2xl font-bold">{score}</div>
         </div>
       </div>
 
@@ -268,50 +278,7 @@ export default function GamePage() {
       
       {/* Timer - En haut au milieu */}
       <div className="fixed top-8 left-1/2 -translate-x-1/2 z-40">
-        <div className="relative w-32 h-32">
-          {/* SVG pour les bordures */}
-          <svg className="absolute inset-0 w-full h-full -rotate-45" viewBox="0 0 100 100">
-            {/* Bordure blanche de base */}
-            <rect
-              x="2"
-              y="2"
-              width="96"
-              height="96"
-              fill="none"
-              stroke="white"
-              strokeWidth="4"
-            />
-            {/* Bordure rouge qui progresse */}
-            <rect
-              x="2"
-              y="2"
-              width="96"
-              height="96"
-              fill="none"
-              stroke="rgb(220, 38, 38)"
-              strokeWidth="4"
-              strokeDasharray="384"
-              strokeDashoffset="384"
-              style={{
-                animation: phase !== "result" ? 'timer-progress 60s linear forwards' : 'none',
-                animationPlayState: phase !== "result" ? 'running' : 'paused'
-              }}
-            />
-          </svg>
-          
-          {/* Losange transparent avec le timer */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-28 h-28 flex items-center justify-center">
-              <div className={`text-6xl font-bold transition-all duration-300 ${
-                timer <= 10 
-                  ? 'text-red-400 animate-pulse drop-shadow-[0_0_12px_rgba(248,113,113,0.9)]' 
-                  : 'text-white'
-              }`}>
-                {timer}
-              </div>
-            </div>
-          </div>
-        </div>
+        <CubeTimer timer={timer} maxTime={60} />
       </div>
 
       {/* Affichage des points - Centre de l'écran */}
@@ -374,9 +341,13 @@ export default function GamePage() {
               {guess.trim() && (
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xl font-bold rounded-full hover:scale-110 transition-transform shadow-lg"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center hover:scale-110 transition-transform"
                 >
-                  &gt;
+                  <img 
+                    src="/images/icon/fleche-droite.png" 
+                    alt="Soumettre" 
+                    className="w-6 h-6 brightness-0 invert"
+                  />
                 </button>
               )}
             </div>
@@ -386,8 +357,8 @@ export default function GamePage() {
 
       {/* Phase 2: Carte de localisation - En bas à droite */}
       {phase === "locating" && (
-        <div className="fixed bottom-8 right-8 z-40 w-full max-w-xs group">
-          <div className="transition-all duration-300 opacity-60 scale-90 group-hover:opacity-100 group-hover:scale-150 group-hover:origin-bottom-right">
+        <div className="fixed bottom-4 right-8 z-40 w-full max-w-xs group">
+          <div className="transition-all duration-300 [transition-delay:1s] opacity-60 scale-90 group-hover:opacity-100 group-hover:scale-[1.75] group-hover:origin-bottom-right group-hover:[transition-delay:0s]">
             <div 
               onClick={handleMapClick}
               onWheel={handleMapWheel}
@@ -395,8 +366,8 @@ export default function GamePage() {
               onMouseMove={handleMapMouseMove}
               onMouseUp={handleMapMouseUp}
               onMouseLeave={handleMapMouseUp}
-              className={`relative aspect-video bg-gray-700 rounded-xl border-2 border-purple-500/50 transition-colors overflow-hidden ${
-                mapZoom > 1 ? 'cursor-move' : 'cursor-crosshair hover:border-purple-400'
+              className={`relative aspect-video bg-gray-700 border-0 group-hover:border-2 group-hover:border-gray-400 overflow-hidden transition-all duration-300 [transition-delay:1s] group-hover:[transition-delay:0s] ${
+                mapZoom > 1 ? 'cursor-move' : 'cursor-crosshair'
               }`}
             >
               {currentGame?.mapFile ? (
@@ -435,7 +406,9 @@ export default function GamePage() {
             <button
               onClick={handleValidateLocation}
               disabled={!markerPosition}
-              className="corner-border-btn w-full mt-2 px-8 py-3 text-white text-lg font-semibold rounded-lg hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className={`corner-border-btn-thin w-full px-6 py-2 text-white text-base font-semibold rounded-lg transition-all duration-300 [transition-delay:1s] group-hover:[transition-delay:0s] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto ${
+                !markerPosition ? 'group-hover:opacity-50' : ''
+              }`}
             >
               Valider
             </button>
@@ -513,9 +486,11 @@ export default function GamePage() {
                     }}
                   />
                   
-                  {/* Vrai point (vert) */}
-                  <div 
-                    className="absolute w-5 h-5 bg-green-500 rounded-full border-2 border-white shadow-lg -translate-x-1/2 -translate-y-1/2 animate-pulse"
+                  {/* Vrai point (drapeau rouge) */}
+                  <img 
+                    src="/images/icon/red-flag.gif"
+                    alt="Emplacement correct"
+                    className="absolute w-12 h-12 -translate-x-1/2 -translate-y-full mix-blend-multiply"
                     style={{ 
                       left: `${correctLocation.x}%`, 
                       top: `${correctLocation.y}%` 
@@ -561,7 +536,7 @@ export default function GamePage() {
             )}
             <button
               onClick={handleNextRound}
-              className="corner-border-btn corner-border-btn-animated mt-8 px-12 py-5 text-white text-xl font-semibold rounded-lg hover:scale-105 transition-transform relative"
+              className="corner-border-btn corner-border-btn-animated mt-8 px-12 py-5 text-white text-xl font-semibold hover:scale-105 transition-transform relative"
             >
               <span className="red-shine"></span>
               <span className="relative z-20">Round suivant</span>
