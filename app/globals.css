@@ -150,3 +150,45 @@ body {
     left: 100%;
   }
 }
+
+@keyframes fog-move {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(15%, -10%) scale(1.2);
+  }
+  50% {
+    transform: translate(-10%, 15%) scale(0.9);
+  }
+  75% {
+    transform: translate(-15%, -12%) scale(1.15);
+  }
+}
+
+@keyframes fog-move-reverse {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(-12%, 15%) scale(1.15);
+  }
+  50% {
+    transform: translate(10%, -12%) scale(0.95);
+  }
+  75% {
+    transform: translate(12%, 10%) scale(1.1);
+  }
+}
+
+@keyframes fog-move-slow {
+  0%, 100% {
+    transform: translate(0, 0) scale(1.1);
+  }
+  33% {
+    transform: translate(8%, -15%) scale(0.95);
+  }
+  66% {
+    transform: translate(-15%, 8%) scale(1.2);
+  }
+}

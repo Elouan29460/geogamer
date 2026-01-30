@@ -177,6 +177,18 @@ export default function CubeTimer({ timer, maxTime }: CubeTimerProps) {
     if (timer !== lastSecondRef.current && timer <= 10) {
       lastSecondChangeTimeRef.current = Date.now();
     }
+    
+    // Animation spéciale quand on passe à 10 secondes
+    if (timer === 10 && lastSecondRef.current === 11) {
+      const container = containerRef.current;
+      if (container) {
+        container.classList.add('animate-[shake_0.5s_ease-in-out]', 'scale-110');
+        setTimeout(() => {
+          container.classList.remove('animate-[shake_0.5s_ease-in-out]', 'scale-110');
+        }, 500);
+      }
+    }
+    
     lastSecondRef.current = timer;
     
     // Réinitialiser le temps de départ quand le timer est à maxTime (nouveau round)
@@ -352,5 +364,5 @@ export default function CubeTimer({ timer, maxTime }: CubeTimerProps) {
     };
   }, [maxTime]);
 
-  return <div ref={containerRef} className="w-40 h-40" />;
+  return <div ref={containerRef} className="w-40 h-40 transition-transform duration-300" />;
 }

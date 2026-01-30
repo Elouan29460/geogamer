@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import gamesData from "@/data/games.json";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const PanoramaViewer = dynamic(() => import("@/components/PanoramaViewer"), {
   ssr: false,
@@ -366,7 +367,7 @@ export default function GamePage() {
               onMouseMove={handleMapMouseMove}
               onMouseUp={handleMapMouseUp}
               onMouseLeave={handleMapMouseUp}
-              className={`relative aspect-video bg-gray-700 border-0 group-hover:border-2 group-hover:border-gray-400 overflow-hidden transition-all duration-300 [transition-delay:1s] group-hover:[transition-delay:0s] ${
+              className={`relative aspect-video bg-gray-700 border-0 group-hover:border-2 group-hover:border-white overflow-hidden transition-all duration-300 [transition-delay:1s] group-hover:[transition-delay:0s] ${
                 mapZoom > 1 ? 'cursor-move' : 'cursor-crosshair'
               }`}
             >
@@ -418,8 +419,24 @@ export default function GamePage() {
 
       {/* Phase 3: Résultat - Centre de l'écran */}
       {phase === "result" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-lg">
-          <div className="p-8 text-center max-w-2xl mx-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+          <div className="absolute inset-0 animate-[fog-move_8s_ease-in-out_infinite]" style={{
+            background: `
+              radial-gradient(circle at 20% 30%, rgba(220, 38, 38, 0.6) 0%, transparent 50%)
+            `
+          }} />
+          <div className="absolute inset-0 animate-[fog-move-reverse_12s_ease-in-out_infinite]" style={{
+            background: `
+              radial-gradient(circle at 80% 70%, rgba(37, 99, 235, 0.6) 0%, transparent 50%)
+            `
+          }} />
+          <div className="absolute inset-0 animate-[fog-move-slow_15s_ease-in-out_infinite]" style={{
+            background: `
+              radial-gradient(circle at 50% 50%, rgba(147, 51, 234, 0.4) 0%, transparent 60%)
+            `
+          }} />
+          <div className="absolute inset-0 bg-black/50" />
+          <div className="p-8 text-center max-w-2xl mx-4 relative z-10">
             {/* Indicateur de rounds en haut */}
             <div className="flex items-center justify-center gap-2 mb-8">
               {Array.from({ length: 15 }, (_, i) => (
@@ -477,14 +494,20 @@ export default function GamePage() {
                     />
                   </svg>
                   
-                  {/* Point du joueur (bleu) */}
+                  {/* Point du joueur (diamant) */}
                   <div 
-                    className="absolute w-5 h-5 bg-blue-500 rounded-full border-2 border-white shadow-lg -translate-x-1/2 -translate-y-1/2"
+                    className="absolute w-12 h-12 -translate-x-1/2 -translate-y-1/2"
                     style={{ 
                       left: `${markerPosition.x}%`, 
                       top: `${markerPosition.y}%` 
                     }}
-                  />
+                  >
+                    <DotLottieReact
+                      src="https://lottie.host/691a6d28-5e97-4ad0-b0b6-dba39273eb8f/GpL82BZrPM.lottie"
+                      loop
+                      autoplay
+                    />
+                  </div>
                   
                   {/* Vrai point (drapeau rouge) */}
                   <img 

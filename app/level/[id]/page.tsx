@@ -79,9 +79,10 @@ export default function LevelIntroPage() {
             {/* Bouton Commencer */}
             <button
               onClick={handleStart}
-              className="px-12 py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-2xl font-bold rounded-full hover:scale-105 transition-transform shadow-lg shadow-purple-500/50 mb-6"
+              className="corner-border-btn corner-border-btn-animated px-12 py-5 text-white text-2xl font-semibold hover:scale-105 transition-transform relative mb-6"
             >
-              Commencer
+              <span className="red-shine"></span>
+              <span className="relative z-20">Commencer</span>
             </button>
 
             {/* Retour */}
