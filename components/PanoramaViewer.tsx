@@ -39,7 +39,7 @@ export default function PanoramaViewer({ imageUrl, autoRotate = false }: Panoram
         panorama: imageUrl,
         autoLoad: true,
         showControls: false,
-        mouseZoom: false,
+        mouseZoom: true,
         compass: false,
         hotSpotDebug: false,
         hfov: 100,

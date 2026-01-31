@@ -13,13 +13,15 @@ export default function CubeTimer({ timer, maxTime }: CubeTimerProps) {
   const cubeGroupRef = useRef<any>(null);
   const rendererRef = useRef<any>(null);
   const animationIdRef = useRef<number>();
-  const startTimeRef = useRef<number>(Date.now());
+  const startTimeRef = useRef<number | null>(null);
   const currentTimerRef = useRef<number>(timer);
   const lastSecondRef = useRef<number>(timer);
   const lastSecondChangeTimeRef = useRef<number>(0);
   const lastEffectTimeRef = useRef<number>(0);
   const particlesRef = useRef<any[]>([]);
   const isInitializedRef = useRef<boolean>(false);
+  const kaleidoscopeTimeRef = useRef<number>(0);
+  const nextKaleidoscopeRef = useRef<number>(Date.now() + 5000 + Math.random() * 10000);
 
 
   // Initialisation de la scène (une seule fois)
@@ -191,6 +193,11 @@ export default function CubeTimer({ timer, maxTime }: CubeTimerProps) {
     
     lastSecondRef.current = timer;
     
+    // Initialiser le temps de départ si ce n'est pas encore fait
+    if (startTimeRef.current === null) {
+      startTimeRef.current = Date.now();
+    }
+    
     // Réinitialiser le temps de départ quand le timer est à maxTime (nouveau round)
     if (timer === maxTime) {
       startTimeRef.current = Date.now();
@@ -217,6 +224,11 @@ export default function CubeTimer({ timer, maxTime }: CubeTimerProps) {
       const ctx = canvas.getContext('2d')!;
       
       const updateCanvas = () => {
+        // S'assurer que startTimeRef est initialisé
+        if (startTimeRef.current === null) {
+          startTimeRef.current = Date.now();
+        }
+        
         const elapsedMs = Date.now() - startTimeRef.current;
         const elapsedSeconds = Math.min(elapsedMs / 1000, maxTime);
         const remainingTime = maxTime - elapsedSeconds;
@@ -241,8 +253,61 @@ export default function CubeTimer({ timer, maxTime }: CubeTimerProps) {
           ctx.fillStyle = gradient;
           ctx.fillRect(0, 0, 256, 256);
           
-          // Effet de flash aléatoire
+          // Effet kaléidoscopique aléatoire
           const now = Date.now();
+          if (now >= nextKaleidoscopeRef.current) {
+            kaleidoscopeTimeRef.current = now;
+            nextKaleidoscopeRef.current = now + 5000 + Math.random() * 10000; // Prochain effet dans 5-15 secondes
+          }
+          
+          const kaleidoscopeDuration = 1500;
+          const timeSinceKaleidoscope = now - kaleidoscopeTimeRef.current;
+          
+          if (timeSinceKaleidoscope < kaleidoscopeDuration) {
+            const progress = timeSinceKaleidoscope / kaleidoscopeDuration;
+            const intensity = Math.sin(progress * Math.PI); // 0 -> 1 -> 0
+            
+            ctx.save();
+            ctx.globalAlpha = intensity * 0.4;
+            
+            // Dessiner des motifs géométriques symétriques
+            for (let angle = 0; angle < 360; angle += 60) {
+              ctx.save();
+              ctx.translate(128, 128);
+              ctx.rotate((angle + progress * 360) * Math.PI / 180);
+              
+              // Triangle
+              ctx.beginPath();
+              ctx.moveTo(0, -60);
+              ctx.lineTo(-30, 30);
+              ctx.lineTo(30, 30);
+              ctx.closePath();
+              
+              const hue = (angle + progress * 360) % 360;
+              ctx.fillStyle = `hsla(${hue}, 80%, 60%, ${intensity * 0.5})`;
+              ctx.fill();
+              
+              ctx.strokeStyle = `hsla(${hue}, 100%, 70%, ${intensity})`;
+              ctx.lineWidth = 2;
+              ctx.stroke();
+              
+              ctx.restore();
+            }
+            
+            // Cercles concentriques colorés
+            for (let r = 30; r < 150; r += 20) {
+              ctx.beginPath();
+              ctx.arc(128, 128, r * (0.5 + intensity * 0.5), 0, Math.PI * 2);
+              const hue = (r * 4 + progress * 360) % 360;
+              ctx.strokeStyle = `hsla(${hue}, 100%, 60%, ${intensity * 0.6})`;
+              ctx.lineWidth = 3;
+              ctx.stroke();
+            }
+            
+            ctx.restore();
+          }
+          
+          // Effet de flash aléatoire
           if (now - lastEffectTimeRef.current < 300) {
             const flashIntensity = 1 - ((now - lastEffectTimeRef.current) / 300);
             const flashGradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 180);

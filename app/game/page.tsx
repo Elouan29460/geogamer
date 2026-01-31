@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import gamesData from "@/data/games.json";
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 const PanoramaViewer = dynamic(() => import("@/components/PanoramaViewer"), {
   ssr: false,
@@ -44,10 +44,7 @@ export default function GamePage() {
   const [gamesCompleted, setGamesCompleted] = useState(0);
   const [wrongAnswer, setWrongAnswer] = useState(false);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
-  const [mapZoom, setMapZoom] = useState(1);
-  const [mapPan, setMapPan] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const mouseDownPosRef = useRef<{ x: number; y: number } | null>(null);
   const [showPoints, setShowPoints] = useState<number | null>(null);
   const [pointsFading, setPointsFading] = useState(false);
   const [locationScore, setLocationScore] = useState(0);
@@ -149,41 +146,29 @@ export default function GamePage() {
     setGuess("");
   };
   
-  const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isDragging) return; // Ne pas placer de marqueur pendant le drag
+  const handleMapClick = (e: React.MouseEvent<HTMLImageElement>) => {
+    // Vérifier si c'était un vrai clic (pas un drag)
+    if (mouseDownPosRef.current) {
+      const distance = Math.sqrt(
+        Math.pow(e.clientX - mouseDownPosRef.current.x, 2) + 
+        Math.pow(e.clientY - mouseDownPosRef.current.y, 2)
+      );
+      // Si la souris a bougé de plus de 5px, c'était un drag, pas un clic
+      if (distance > 5) {
+        mouseDownPosRef.current = null;
+        return;
+      }
+    }
     
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-    
-    // Placer le marqueur
     setMarkerPosition({ x, y });
+    mouseDownPosRef.current = null;
   };
-
-  const handleMapWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const delta = e.deltaY > 0 ? -0.1 : 0.1;
-    setMapZoom(prev => Math.max(1, Math.min(3, prev + delta)));
-  };
-
-  const handleMapMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (mapZoom > 1) {
-      setIsDragging(true);
-      setDragStart({ x: e.clientX - mapPan.x, y: e.clientY - mapPan.y });
-    }
-  };
-
-  const handleMapMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isDragging && mapZoom > 1) {
-      setMapPan({
-        x: e.clientX - dragStart.x,
-        y: e.clientY - dragStart.y
-      });
-    }
-  };
-
-  const handleMapMouseUp = () => {
-    setIsDragging(false);
+  
+  const handleMapMouseDown = (e: React.MouseEvent<HTMLImageElement>) => {
+    mouseDownPosRef.current = { x: e.clientX, y: e.clientY };
   };
   
   const handleValidateLocation = () => {
@@ -232,8 +217,6 @@ export default function GamePage() {
     setMessage("");
     setRoundScore(0);
     setMarkerPosition(null);
-    setMapZoom(1);
-    setMapPan({ x: 0, y: 0 });
   };
 
   return (
@@ -294,7 +277,7 @@ export default function GamePage() {
       )}
 
       {/* Message de feedback - En haut (seulement pour résultat final) */}
-      {message && phase !== "guessing" && !showPoints && (
+      {message && phase !== "guessing" && phase !== "result" && !showPoints && (
         <div className="fixed top-32 left-1/2 -translate-x-1/2 z-40">
           <div className={`px-6 py-3 rounded-lg backdrop-blur-md ${
             message.includes('Bravo') || message.includes('points') 
@@ -358,42 +341,49 @@ export default function GamePage() {
 
       {/* Phase 2: Carte de localisation - En bas à droite */}
       {phase === "locating" && (
-        <div className="fixed bottom-4 right-8 z-40 w-full max-w-xs group">
-          <div className="transition-all duration-300 [transition-delay:1s] opacity-60 scale-90 group-hover:opacity-100 group-hover:scale-[1.75] group-hover:origin-bottom-right group-hover:[transition-delay:0s]">
-            <div 
-              onClick={handleMapClick}
-              onWheel={handleMapWheel}
-              onMouseDown={handleMapMouseDown}
-              onMouseMove={handleMapMouseMove}
-              onMouseUp={handleMapMouseUp}
-              onMouseLeave={handleMapMouseUp}
-              className={`relative aspect-video bg-gray-700 border-0 group-hover:border-2 group-hover:border-white overflow-hidden transition-all duration-300 [transition-delay:1s] group-hover:[transition-delay:0s] ${
-                mapZoom > 1 ? 'cursor-move' : 'cursor-crosshair'
-              }`}
-            >
+        <div className="fixed bottom-4 right-8 z-40 group">
+          <div className="transition-all duration-300 [transition-delay:1s] opacity-60 w-80 group-hover:opacity-100 group-hover:w-[560px] group-hover:origin-bottom-right group-hover:[transition-delay:0s]">
+            <div className="relative aspect-video bg-gray-700 border-0 group-hover:border-2 group-hover:border-white overflow-hidden transition-all duration-300 [transition-delay:1s] group-hover:[transition-delay:0s]">
               {currentGame?.mapFile ? (
-                <>
-                  <img 
-                    src={`/images/maps/${currentGame.mapFile}`}
-                    alt="Carte du jeu"
-                    className="w-full h-full object-cover pointer-events-none select-none"
-                    style={{
-                      transform: `scale(${mapZoom}) translate(${mapPan.x / mapZoom}px, ${mapPan.y / mapZoom}px)`,
-                      transformOrigin: 'center center',
-                      transition: isDragging ? 'none' : 'transform 0.2s ease-out'
-                    }}
-                  />
-                  {/* Marqueur */}
-                  {markerPosition && (
-                    <div 
-                      className="absolute w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-lg -translate-x-1/2 -translate-y-1/2 animate-pulse"
-                      style={{ 
-                        left: `${markerPosition.x}%`, 
-                        top: `${markerPosition.y}%` 
-                      }}
-                    />
+                <TransformWrapper
+                  initialScale={1}
+                  minScale={1}
+                  maxScale={3}
+                  wheel={{ 
+                    step: 0.1,
+                    smoothStep: 0.01
+                  }}
+                  doubleClick={{ disabled: true }}
+                >
+                  {({ zoomIn, zoomOut, resetTransform }) => (
+                    <TransformComponent
+                      wrapperStyle={{ width: '100%', height: '100%', cursor: 'crosshair' }}
+                      contentStyle={{ width: '100%', height: '100%' }}
+                    >
+                      <div className="relative w-full h-full">
+                        <img 
+                          src={`/images/maps/${currentGame.mapFile}`}
+                          alt="Carte du jeu"
+                          className="w-full h-full object-cover select-none"
+                          onClick={handleMapClick}
+                          onMouseDown={handleMapMouseDown}
+                          draggable={false}
+                          style={{ pointerEvents: 'auto' }}
+                        />
+                        {/* Marqueur */}
+                        {markerPosition && (
+                          <div 
+                            className="absolute w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-lg -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                            style={{ 
+                              left: `${markerPosition.x}%`, 
+                              top: `${markerPosition.y}%`
+                            }}
+                          />
+                        )}
+                      </div>
+                    </TransformComponent>
                   )}
-                </>
+                </TransformWrapper>
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-gray-300 text-center px-4">
@@ -494,29 +484,23 @@ export default function GamePage() {
                     />
                   </svg>
                   
-                  {/* Point du joueur (diamant) */}
+                  {/* Point du joueur (bleu) */}
                   <div 
-                    className="absolute w-12 h-12 -translate-x-1/2 -translate-y-1/2"
+                    className="absolute w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-lg -translate-x-1/2 -translate-y-1/2"
                     style={{ 
                       left: `${markerPosition.x}%`, 
-                      top: `${markerPosition.y}%` 
+                      top: `${markerPosition.y}%`,
+                      zIndex: 10
                     }}
-                  >
-                    <DotLottieReact
-                      src="https://lottie.host/691a6d28-5e97-4ad0-b0b6-dba39273eb8f/GpL82BZrPM.lottie"
-                      loop
-                      autoplay
-                    />
-                  </div>
+                  />
                   
-                  {/* Vrai point (drapeau rouge) */}
-                  <img 
-                    src="/images/icon/red-flag.gif"
-                    alt="Emplacement correct"
-                    className="absolute w-12 h-12 -translate-x-1/2 -translate-y-full mix-blend-multiply"
+                  {/* Vrai point (rouge) */}
+                  <div 
+                    className="absolute w-3 h-3 bg-red-500 rounded-full border-2 border-white shadow-lg -translate-x-1/2 -translate-y-1/2"
                     style={{ 
                       left: `${correctLocation.x}%`, 
-                      top: `${correctLocation.y}%` 
+                      top: `${correctLocation.y}%`,
+                      zIndex: 10
                     }}
                   />
                 </div>
